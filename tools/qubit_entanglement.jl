@@ -1,9 +1,11 @@
 # Qubit-like entanglement in Bose-Hubbard chains in 1D.
 
-push!(LOAD_PATH, joinpath(dirname(@__FILE__), "../src"))
 using BoseHubbardDiagonalize
 
+using LinearAlgebra: tr
+
 using ArgParse
+using Arpack
 using JeszenszkiBasis
 using Qutilities
 
@@ -112,29 +114,15 @@ end
 
 const bulk = setdiff(1:M, qubit_sites)
 
-if c[:u_log] && c[:u_num] === nothing
-    println("--u-log must be used with --u-num")
+try
+    global U_range = range(c[:u_min]; stop=c[:u_max], length=c[:u_num], step=c[:u_step])
+catch ex
+    ex isa ArgumentError || rethrow()
+    println("--u-step and --u-num may not both be supplied")
     exit(1)
 end
 
-if c[:u_step] === nothing
-    if c[:u_num] === nothing
-        U_range = c[:u_min]:0.5:c[:u_max]
-    else
-        if c[:u_log]
-            U_range = logspace(c[:u_min], c[:u_max], c[:u_num])
-        else
-            U_range = linspace(c[:u_min], c[:u_max], c[:u_num])
-        end
-    end
-else
-    if c[:u_num] === nothing
-        U_range = c[:u_min]:c[:u_step]:c[:u_max]
-    else
-        println("--u-step and --u-num may not both be supplied")
-        exit(1)
-    end
-end
+c[:u_log] && (U_range = 10 .^ U_range)
 
 if site_max === nothing
     const basis = Szbasis(M, N)
@@ -180,9 +168,9 @@ open(output, "w") do f
         end
         rho_AB /= P
 
-        err_trace = abs(trace(rho_AB) - 1.0)
+        err_trace = abs(tr(rho_AB) - 1.0)
         if err_trace > 1e-15
-            warn("Bad trace: $(err_trace)")
+            @warn("Bad trace: $(err_trace)")
         end
 
         # Very reduced density matrix.

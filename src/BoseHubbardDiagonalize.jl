@@ -1,5 +1,8 @@
 module BoseHubbardDiagonalize
 
+using LinearAlgebra: svdvals
+using SparseArrays: sparse
+
 using JeszenszkiBasis
 
 export
@@ -14,7 +17,10 @@ export
 """
 Boundary conditions.
 """
-@enum BdryCond PBC OBC
+@enum BdryCond begin
+    PBC
+    OBC
+end
 @doc "Periodic boundary conditions." PBC
 @doc "Open boundary conditions." OBC
 

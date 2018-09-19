@@ -1,9 +1,9 @@
 # Renyi entanglement entropy of Bose-Hubbard chains in 1D.
 
-push!(LOAD_PATH, joinpath(dirname(@__FILE__), "src"))
 using BoseHubbardDiagonalize
 
 using ArgParse
+using Arpack
 using JeszenszkiBasis
 
 s = ArgParseSettings()
@@ -98,7 +98,7 @@ else
         using ProgressMeter
     catch
         include("utils/fakeprogress.jl")
-        warn("Install ProgressMeter for a progress bar or use --no-progress to silence this message.")
+        @warn("Install ProgressMeter for a progress bar or use --no-progress to silence this message.")
     end
 end
 
@@ -115,29 +115,15 @@ const boundary = c[:boundary]
 # Size of region A
 const Asize = c[:ee]
 
-if c[:u_log] && c[:u_num] === nothing
-    println("--u-log must be used with --u-num")
+try
+    global U_range = range(c[:u_min]; stop=c[:u_max], length=c[:u_num], step=c[:u_step])
+catch ex
+    ex isa ArgumentError || rethrow()
+    println("--u-step and --u-num may not both be supplied")
     exit(1)
 end
 
-if c[:u_step] === nothing
-    if c[:u_num] === nothing
-        U_range = c[:u_min]:0.5:c[:u_max]
-    else
-        if c[:u_log]
-            U_range = logspace(c[:u_min], c[:u_max], c[:u_num])
-        else
-            U_range = linspace(c[:u_min], c[:u_max], c[:u_num])
-        end
-    end
-else
-    if c[:u_num] === nothing
-        U_range = c[:u_min]:c[:u_step]:c[:u_max]
-    else
-        println("--u-step and --u-num may not both be supplied")
-        exit(1)
-    end
-end
+c[:u_log] && (U_range = 10 .^ U_range)
 
 if site_max === nothing
     const basis = Szbasis(M, N)
@@ -168,7 +154,7 @@ open(output, "w") do f
         d = eigs(H, nev=1, which=:SR, v0=v0)
         E0 = d[1][1]
         wf = vec(d[2])
-        d[3] == 1 || warn("Diagonalization did not converge")
+        d[3] == 1 || @warn("Diagonalization did not converge")
         niters[i] = d[4]
         nmults[i] = d[5]
 

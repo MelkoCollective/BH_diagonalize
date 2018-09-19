@@ -1,7 +1,7 @@
 """
 Calculate the particle entanglement entropy for a subset A, using the SVD.
 """
-function particle_entropy{T<:Number}(basis::AbstractSzbasis, Asize::Int, d::Vector{T})
+function particle_entropy(basis::AbstractSzbasis, Asize::Int, d::Vector{T}) where {T<:Number}
     basisA, basisB = particle_entropy_bases(basis, Asize)
     # Matrix to SVD
     Amatrix = zeros(T, length(basisA), length(basisB))
@@ -24,7 +24,7 @@ function particle_entropy{T<:Number}(basis::AbstractSzbasis, Asize::Int, d::Vect
     err = abs(sum(S.^2) - 1.0)
 
     if err > 1e-12
-        warn("RDM eigenvalue error: $(err)")
+        @warn("RDM eigenvalue error: $(err)")
     end
 
     -log(sum(S.^4))

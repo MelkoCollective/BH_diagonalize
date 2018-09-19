@@ -1,9 +1,9 @@
 # Operational entanglement peak for Bose-Hubbard chains in 1D.
 
-push!(LOAD_PATH, joinpath(dirname(@__FILE__), "../src"))
 using BoseHubbardDiagonalize
 
 using ArgParse
+using Arpack
 using JeszenszkiBasis
 using LsqFit
 
@@ -93,7 +93,7 @@ else
 end
 
 # Fitting model.
-model(x, p) = p[1] + p[2]*x + p[3]*x.^2
+model(x, p) = p[1] .+ p[2]*x .+ p[3]*x.^2
 
 open(output, "w") do f
     if site_max === nothing
@@ -131,8 +131,8 @@ open(output, "w") do f
                 error("No window")
             end
 
-            U_left, U_left_idx = findmax([U < U_max ? U : NaN for U in Us])
-            U_right, U_right_idx = findmin([U > U_max ? U : NaN for U in Us])
+            U_left, U_left_idx = findmax([U < U_max ? U : -Inf for U in Us])
+            U_right, U_right_idx = findmin([U > U_max ? U : Inf for U in Us])
 
             # If we have tight enough bounds, we're done.
             bound = max(U_max - U_left, U_right - U_max) / c[:t]
@@ -150,7 +150,7 @@ open(output, "w") do f
 
             # If the fit isn't reasonable, we don't use it at all.
             if !(U_left < U < U_right)
-                info("Bad fit: $(U/c[:t]), bisecting")
+                @info("Bad fit: $(U/c[:t]), bisecting")
                 if S2s[U_left_idx] > S2s[U_right_idx]
                     U = 0.5 * (U_left + U_max)
                 else
