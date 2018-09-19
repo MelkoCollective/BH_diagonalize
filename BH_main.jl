@@ -5,6 +5,7 @@ using BoseHubbardDiagonalize
 using ArgParse
 using Arpack
 using JeszenszkiBasis
+using ProgressMeter: Progress, ProgressWrapper
 
 s = ArgParseSettings()
 s.autofix_names = true
@@ -91,17 +92,6 @@ add_arg_group(s, "entanglement entropy")
 end
 c = parsed_args = parse_args(ARGS, s, as_symbols=true)
 
-if c[:no_progress]
-    include("utils/fakeprogress.jl")
-else
-    try
-        using ProgressMeter
-    catch
-        include("utils/fakeprogress.jl")
-        @warn("Install ProgressMeter for a progress bar or use --no-progress to silence this message.")
-    end
-end
-
 # Number of sites
 const M = c[:M]
 # Number of particles
@@ -114,6 +104,8 @@ const site_max = c[:site_max]
 const boundary = c[:boundary]
 # Size of region A
 const Asize = c[:ee]
+
+const progress_output = c[:no_progress] ? devnull : stderr
 
 try
     global U_range = range(c[:u_min]; stop=c[:u_max], length=c[:u_num], step=c[:u_step])
@@ -146,7 +138,8 @@ open(output, "w") do f
     end
     write(f, "# U/t E0/t S2(n=$(Asize)) S2(l=$(Asize)) Eop(l=$(Asize))\n")
 
-    @showprogress for (i, U) in enumerate(U_range)
+    meter = Progress(length(U_range), output=progress_output)
+    for (i, U) in ProgressWrapper(enumerate(U_range), meter)
         # Create the Hamiltonian
         H = sparse_hamiltonian(basis, c[:t], U, boundary=boundary)
 
