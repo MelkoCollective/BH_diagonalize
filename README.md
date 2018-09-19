@@ -14,7 +14,7 @@ Tested with Julia 1.0.
 pkg> add https://github.com/MelkoCollective/BH_diagonalize.git
 ```
 
-In order to run the driver scripts, you will also need to
+In order to run the driver scripts in `bin/`, you will also need to
 ```
 pkg> add ArgParse
 pkg> add Arpack
@@ -29,16 +29,16 @@ pkg> add Qutilities
 
 To run the following examples, you should set the project (e.g. using `--project` or `JULIA_PROJECT`) to a Julia project that has the prerequisites installed.
 
-* `julia BH_main.jl --help`
-* `julia BH_main.jl --out output.dat --ee 2 4 4`
-* `julia BH_main.jl --out output.dat --site-max 4 --ee 3 6 6`
+* `julia bin/diagonalize.jl --help`
+* `julia bin/diagonalize.jl --out output.dat --ee 2 4 4`
+* `julia bin/diagonalize.jl --out output.dat --site-max 4 --ee 3 6 6`
 
 - - - -
 
-* `julia tools/eop_peak_finder.jl --help`
-* `julia tools/eop_peak_finder.jl --out output.dat --u-min 6 --u-max 10 4 4 2`
+* `julia bin/eop_peak_finder.jl --help`
+* `julia bin/eop_peak_finder.jl --out output.dat --u-min 6 --u-max 10 4 4 2`
 
 - - - -
 
-* `julia tools/qubit_entanglement.jl --help`
-* `julia tools/qubit_entanglement.jl --out output.dat 6 6 1 2 5 6`
+* `julia bin/qubit_entanglement.jl --help`
+* `julia bin/qubit_entanglement.jl --out output.dat 6 6 1 2 5 6`
