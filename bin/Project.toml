@@ -1,0 +1,11 @@
+name = "BoseHubbardDiagonalize driver scripts"
+authors = ["Roger Melko <rgmelko@uwaterloo.ca>", "Dmitri Iouchtchenko <diouchtc@uwaterloo.ca>"]
+
+[deps]
+ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+Arpack = "7d9fca2a-8960-54d3-9f78-7d1dccf2cb97"
+BoseHubbardDiagonalize = "89f0727c-bc31-11e8-1ce6-853ab2505967"
+JeszenszkiBasis = "4eec09b6-37c8-513a-a01b-84ce271f0312"
+LsqFit = "2fda8390-95c7-5789-9bda-21331edee243"
+ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
+Qutilities = "144146ce-868b-5e43-9e5b-0e94f26a569f"

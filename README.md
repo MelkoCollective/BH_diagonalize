@@ -24,6 +24,19 @@ pkg> add ProgressMeter
 pkg> add Qutilities
 ```
 
+### Application project
+
+If you're working with a clone of this repository, you can use the basic application project in `bin/`, which already has the necessary dependencies.
+From the repository root, run
+```
+julia --project=bin
+```
+and then
+```
+pkg> dev .
+```
+to create `bin/Manifest.toml` with a development version of `BoseHubbardDiagonalize`.
+
 
 ## Examples
 
