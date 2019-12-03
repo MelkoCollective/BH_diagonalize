@@ -117,7 +117,7 @@ end
 
 c[:u_log] && (U_range = 10 .^ U_range)
 
-if site_max === nothing
+if isnothing(site_max)
     const basis = Szbasis(M, N)
 else
     const basis = RestrictedSzbasis(M, N, site_max)
@@ -131,7 +131,7 @@ const niters = zeros(Int, length(U_range))
 const nmults = zeros(Int, length(U_range))
 
 open(output, "w") do f
-    if site_max === nothing
+    if isnothing(site_max)
         write(f, "# M=$(M), N=$(N), $(boundary)\n")
     else
         write(f, "# M=$(M), N=$(N), max=$(site_max), $(boundary)\n")

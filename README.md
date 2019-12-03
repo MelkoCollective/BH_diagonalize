@@ -5,7 +5,7 @@ A Julia exact diagonalization code for the [Bose-Hubbard model](https://en.wikip
 The basis is enumerated using the method of [Szabados et al., 2011](http://coulson.chem.elte.hu/surjan/PREPRINTS/181.pdf).
 See also [Zhang et al., 2011](http://arxiv.org/pdf/1102.4006v1.pdf).
 
-Tested with Julia 1.0.
+Tested with Julia 1.3.
 
 
 ## Installation

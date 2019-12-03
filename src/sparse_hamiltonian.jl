@@ -32,7 +32,7 @@ function sparse_hamiltonian(basis::AbstractSzbasis, Ts::AbstractVector{Float64},
 
         # Off-diagonal part
         for j in 1:end_site
-            j_next = j%basis.K + 1
+            j_next = mod(j+1, 1:basis.K)
             # Tunnel right, tunnel left.
             for (site1, site2) in [(j, j_next), (j_next, j)]
                 if bra[site1] > 0

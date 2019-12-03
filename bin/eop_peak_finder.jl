@@ -86,7 +86,7 @@ const site_max = c[:site_max]
 # Boundary conditions
 const boundary = c[:boundary]
 
-if site_max === nothing
+if isnothing(site_max)
     const basis = Szbasis(M, N)
 else
     const basis = RestrictedSzbasis(M, N, site_max)
@@ -96,7 +96,7 @@ end
 model(x, p) = p[1] .+ p[2]*x .+ p[3]*x.^2
 
 open(output, "w") do f
-    if site_max === nothing
+    if isnothing(site_max)
         write(f, "# M=$(M), N=$(N), $(boundary)\n")
     else
         write(f, "# M=$(M), N=$(N), max=$(site_max), $(boundary)\n")
